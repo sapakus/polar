@@ -6,7 +6,7 @@ import { dockerService } from 'lib/docker';
 import { Network } from 'types';
 import { DOCKER_REPO } from 'utils/constants';
 import * as files from 'utils/files';
-import { getNetwork } from 'utils/tests';
+import { getNetwork, mockProperty } from 'utils/tests';
 
 jest.mock('dockerode');
 jest.mock('utils/files', () => ({
@@ -202,13 +202,14 @@ describe('DockerService', () => {
     });
 
     it('should not fail if electron.remote is undefined', async () => {
-      electronMock.remote.process = undefined;
+      const oldProcess = electronMock.remote.process;
+      mockProperty(electron.remote, 'process', undefined);
       composeMock.upAll.mockResolvedValue(mockResult);
       await dockerService.start(network);
       expect(composeMock.upAll).toBeCalledWith(
         expect.objectContaining({ cwd: network.path }),
       );
-      electronMock.remote.process = {};
+      mockProperty(electron.remote, 'process', oldProcess);
     });
   });
 });

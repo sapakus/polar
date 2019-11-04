@@ -21,7 +21,7 @@ export const getNetwork = (networkId = 1, name?: string, status?: Status): Netwo
 export const mockProperty = <T extends {}, K extends keyof T>(
   object: T,
   property: K,
-  value: T[K],
+  value?: T[K],
 ) => {
   Object.defineProperty(object, property, { get: () => value });
 };
